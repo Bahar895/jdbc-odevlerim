@@ -4,6 +4,7 @@ import org.bebka.jdbc.config.DataBaseConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -20,6 +21,19 @@ String sql = "CREATE TABLE IF NOT EXISTS users (" +
             Statement statement = connection.createStatement();
             statement.execute(sql);
             System.out.println("Tablo oluşturuldu");
+
+            //preparedstatement
+            String insertSql = "INSERT INTO users(name,email) VALUES (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
+            preparedStatement.setString(1,"Ali");
+            preparedStatement.setString(2,"ali@mail.com");
+            preparedStatement.executeUpdate();
+            System.out.println("Veri başarıyla eklendi");
+
+            preparedStatement.close();
+            statement.close();
+            connection.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
