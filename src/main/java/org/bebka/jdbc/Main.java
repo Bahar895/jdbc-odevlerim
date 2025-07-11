@@ -2,10 +2,7 @@ package org.bebka.jdbc;
 
 import org.bebka.jdbc.config.DataBaseConfig;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -30,6 +27,18 @@ String sql = "CREATE TABLE IF NOT EXISTS users (" +
             preparedStatement.executeUpdate();
             System.out.println("Veri başarıyla eklendi");
 
+            //resultset ile veri ekleme
+            String selectSql = "SELECT * FROM users";
+            Statement selectStatement = connection.createStatement();
+            ResultSet resultSet = selectStatement.executeQuery(selectSql);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email =resultSet.getString("email");
+                System.out.println("ID: " + id + "Ad: " + name + "Email: " + email);
+            }
+            resultSet.close();
+            selectStatement.close();
             preparedStatement.close();
             statement.close();
             connection.close();
