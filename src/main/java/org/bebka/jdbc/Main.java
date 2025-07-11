@@ -37,6 +37,22 @@ String sql = "CREATE TABLE IF NOT EXISTS users (" +
                 String email =resultSet.getString("email");
                 System.out.println("ID: " + id + "Ad: " + name + "Email: " + email);
             }
+
+            //update and delete
+            String updateSql = "UPDATE users SET name = ? WHERE id = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+            updateStatement.setString(1,"Veli");
+            updateStatement.setInt(2,1);
+            int updateCount = updateStatement.executeUpdate();
+            System.out.println(updateCount + "kayıt güncellendi");
+            String deleteSql = "DELETE FROM users WHERE id = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+            deleteStatement.setInt(1,2);
+            int deleteCount = deleteStatement.executeUpdate();
+            System.out.println(deleteCount + "kayıt silindi.");
+
+            updateStatement.close();
+            deleteStatement.close();
             resultSet.close();
             selectStatement.close();
             preparedStatement.close();
