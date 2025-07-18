@@ -16,7 +16,7 @@ public class Main {
             tx = session.beginTransaction();
 
             // 1. Öğrenci oluştur ve kaydet
-            Student student = new Student("Bahar", "Aydın");
+            Student student = new Student("Zeynep", "Kaya");
             session.save(student);
 
             // 2. Öğrenciyi veritabanından al
@@ -24,16 +24,16 @@ public class Main {
             System.out.println("Veritabanından okunan: " + readStudent);
 
             // 3. Güncelleme işlemi
-            readStudent.setName("Derin");
-            readStudent.setSurname("Aydın");
+            readStudent.setName("Zeynep Güncel");
             session.update(readStudent);
 
             // 4. Silme işlemi
-            session.delete(readStudent);
-            System.out.println("Öğrenci silindi: " + readStudent);
+            //session.delete(readStudent);
+            //System.out.println("Öğrenci silindi: " + readStudent);
 
             // 5. Commit
             tx.commit();
+            System.out.println("İşlem başarıyla tamamlandı");
 
         } catch (Exception e) {
             if (tx != null) {
