@@ -8,34 +8,40 @@ import org.hibernate.Transaction;
 
 public class Main {
     public static void main(String[] args) {
-
-        // SessionFactory'yi al
         SessionFactory factory = HibernateUtil.getSessionFactory();
-
-        // Oturumu başlat
         Session session = factory.openSession();
-        Transaction tx = session.beginTransaction();
+        Transaction tx = null;
 
-        // Yeni öğrenci oluştur ve veritabanına kaydet
-        Student student = new Student("Bahar", "Aydın");
-        session.save(student);
+        try {
+            tx = session.beginTransaction();
 
-        // Veriyi geri okuma
-        Student readStudent = session.get(Student.class, 4);
-        System.out.println(readStudent);
+            // 1. Öğrenci oluştur ve kaydet
+            Student student = new Student("Bahar", "Aydın");
+            session.save(student);
 
-        //Update
-        readStudent.setName("Derin");
-        readStudent.setSurname("Aydın");
-        session.update(readStudent);
+            // 2. Öğrenciyi veritabanından al
+            Student readStudent = session.get(Student.class, student.getId());
+            System.out.println("Veritabanından okunan: " + readStudent);
 
-        //Öğrenciyi silme işlemi
-        session.delete(readStudent);
-        System.out.println("Öğrenci silindi" + readStudent);
+            // 3. Güncelleme işlemi
+            readStudent.setName("Derin");
+            readStudent.setSurname("Aydın");
+            session.update(readStudent);
 
-        tx.commit();
+            // 4. Silme işlemi
+            session.delete(readStudent);
+            System.out.println("Öğrenci silindi: " + readStudent);
 
-        // Oturumu kapat
-        session.close();
+            // 5. Commit
+            tx.commit();
+
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback(); // Hata varsa geri al
+            }
+            e.printStackTrace();
+        } finally {
+            session.close(); // Oturumu her durumda kapat
+        }
     }
 }
