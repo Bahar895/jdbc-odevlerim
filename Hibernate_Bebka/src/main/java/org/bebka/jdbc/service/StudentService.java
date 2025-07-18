@@ -2,40 +2,30 @@ package org.bebka.jdbc.service;
 
 import org.bebka.jdbc.dao.StudentDAO;
 import org.bebka.jdbc.model.Student;
-import org.bebka.jdbc.util.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class StudentService {
 
-    private final StudentDAO studentDAO = new StudentDAO();
+    private StudentDAO studentDAO;
 
-    public void performStudentOperations() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
+    // === BU CONSTRUCTOR'I EKLE ===
+    public StudentService(StudentDAO studentDAO) {
+        this.studentDAO = studentDAO;
+    }
 
-        try {
-            tx = session.beginTransaction();
+    public void createUser(Session session, Student student) {
+        studentDAO.createUser(session, student);
+    }
 
-            Student student = new Student("Mehmet", "Yılmaz");
-            studentDAO.saveStudent(session, student);
+    public Student getUserById(Session session, Long id) {
+        return studentDAO.getUserById(session, id);
+    }
 
-            student.setName("Mehmet Güncel");
-            studentDAO.updateStudent(session, student);
+    public void updateUser(Session session, Student student) {
+        studentDAO.updateUser(session, student);
+    }
 
-            studentDAO.deleteStudent(session, student);
-
-            tx.commit();
-            System.out.println("Tüm işlemler başarılı şekilde tamamlandı.");
-
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-                System.out.println("Hata oldu, işlemler geri alındı.");
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+    public void deleteUser(Session session, Student student) {
+        studentDAO.deleteUser(session, student);
     }
 }

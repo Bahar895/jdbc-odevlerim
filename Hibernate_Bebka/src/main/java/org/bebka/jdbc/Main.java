@@ -45,13 +45,48 @@
 //        }
 //    }
 //}
+//package org.bebka.jdbc;
+//
+//import org.bebka.jdbc.service.StudentService;
+//
+//public class Main {
+//    public static void main(String[] args) {
+//        StudentService service = new StudentService();
+//        service.performStudentOperations();
+//    }
+//}
 package org.bebka.jdbc;
 
+import org.bebka.jdbc.dao.StudentDAO;
+import org.bebka.jdbc.model.Student;
 import org.bebka.jdbc.service.StudentService;
+import org.bebka.jdbc.util.HibernateUtil;
+import org.hibernate.Session;
 
 public class Main {
     public static void main(String[] args) {
-        StudentService service = new StudentService();
-        service.performStudentOperations();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
+        // DAO ve Service katmanlarını oluştur
+        StudentDAO studentDAO = new StudentDAO();
+        StudentService studentService = new StudentService(studentDAO);
+
+        // Yeni öğrenci oluştur
+        Student student = new Student("Ali", "Yılmaz");
+
+        // Create (Ekle)
+        studentService.createUser(session, student);
+
+        // Read (ID ile çek)
+        Student found = studentService.getUserById(session, (long)student.getId());
+        System.out.println("Bulunan öğrenci: " + found.getName() + " " + found.getSurname());
+
+        // Update (Güncelle)
+        found.setSurname("Güncellenmiş Soyad");
+        studentService.updateUser(session, found);
+
+        // Delete (Sil)
+        studentService.deleteUser(session, found);
+
     }
 }

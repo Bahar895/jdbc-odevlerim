@@ -6,19 +6,40 @@ import org.hibernate.Transaction;
 
 public class StudentDAO {
 
-    public void saveStudent(Session session, Student student) {
-        session.save(student);
+    public void createUser(Session session, Student student) {
+        Transaction tx = session.beginTransaction();
+        try {
+            session.save(student);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        }
     }
 
-    public Student getStudentById(Session session, int id) {
+    public Student getUserById(Session session, Long id) {
         return session.get(Student.class, id);
     }
 
-    public void updateStudent(Session session, Student student) {
-        session.update(student);
+    public void updateUser(Session session, Student student) {
+        Transaction tx = session.beginTransaction();
+        try {
+            session.update(student);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        }
     }
 
-    public void deleteStudent(Session session, Student student) {
-        session.delete(student);
+    public void deleteUser(Session session, Student student) {
+        Transaction tx = session.beginTransaction();
+        try {
+            session.delete(student);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        }
     }
 }
